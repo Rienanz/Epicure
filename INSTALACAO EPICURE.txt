@@ -14,7 +14,7 @@
 
 	Link_2: https://drive.google.com/file/d/1CZ4Y8NJyfKTx1YWxxIV2edHsETKKnRxQ/view?usp=sharing
 
-	Link_3:
+	Link_3: https://github.com/Rienanz/Epicure.git
 
 4. Senha
 
