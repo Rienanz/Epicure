@@ -34,7 +34,7 @@
 			
 				include_once './menu.php'; 
 				
-				if($_SESSION == NULL){
+				if($_SESSION == NULL || $_SESSION['permissaoUsuario'] != 'Admin'){
 	
 					die(header("Refresh: 0.1;url=/Epicure/login.php"));
 					
@@ -45,11 +45,11 @@
 
 		<div id="cadastro-form">
 			<div id="cadastro-title">
-				<label class="cadastro-titulo">CADASTRO</label>
+				<label class="cadastro-titulo">CADASTRO DE EMPRESA</label>
 			</div>
 			<div id="cadastro-form-left">
-				<form method="post" action="/Epicure/processo/cadastro.php">
-					<label class="formulario">Nome de Usuário</label><br>
+				<form method="post" action="/Epicure/processo/cadastro-empresa.php">
+					<label class="formulario">Nome da Empresa</label><br>
 					<input type="text" name="txtNome"><br>
 					<label class="formulario">E-mail</label><br>
 					<input type="text" name="txtEmail"><br>
@@ -77,8 +77,8 @@
 					<label class="formulario">Tipo de Endereço</label><br>
 					<select id="txtTipoEndereco" name="txtTipoEndereco">
 						<option value="Casa">Casa</option>
-						<option value="Prédio">Prédio</option>
-						<option value="Galpão">Galpão</option>
+						<option value="Predio">Prédio</option>
+						<option value="Galpao">Galpão</option>
 						<option value="Outro">Outro</option>
 					</select>
 					

@@ -77,7 +77,7 @@ include_once './classes/epicure.class.php';
 												
 					}elseif($_SESSION['permissaoUsuario'] == "Admin"){
 						
-						die(header("Refresh: 0.1;url=dashboard.php"));
+						die(header("Refresh: 0.1;url=/Epicure/dashboard/dashboard.php"));
 						
 					}
 

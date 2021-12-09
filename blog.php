@@ -63,9 +63,7 @@ $database = new epicure();
 						$codDica = $infoDica['CodDicas'];
     				    $tituloDica = $infoDica['TituloDicas'];
 						$dica = substr($infoDica['DescricaoDicas'], 0, 200);
-						
-						
-				    
+										    
         				echo("
         
 							<div class='post-blog'>
@@ -88,16 +86,16 @@ $database = new epicure();
 						if($_SESSION['codEmpresa'] == NULL){
 						
 							echo("
-										<a href='/Epicure/processo/like.php'><button id='like' class='fa fa-thumbs-o-up like'></button></a><br>
+								<a href='/Epicure/processo/like.php'><button id='like' class='fa fa-thumbs-o-up like'></button></a><br>
 							");
 						
 						}
 						
 						echo("
-									<a href='./dicas/dica.php?dc=$codDica'><button class='button'>Veja Mais</button></a>
+											<a href='./dicas/dica.php?dc=$codDica'><button class='button'>Veja Mais</button></a>
+										</div>
+									</div>
 								</div>
-								</div>
-							</div>
 							</div>
         				");       				
     				    
@@ -105,27 +103,6 @@ $database = new epicure();
 				
 				?>
 			
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <ul class="nav navbar-nav ml-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Portfolio</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Contact</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </nav>
-	  </div>
-	</div>
-
 	<link rel="stylesheet" href="/Epicure/css/animate.css">
 	<script src="/Epicure/js/jquery.min.js"></script>
     <script src="/Epicure/js/popper.js"></script>

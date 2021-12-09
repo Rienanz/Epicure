@@ -41,7 +41,7 @@ class epicure{
     }
     
     
-/* Fun��es dos Usu�rios */
+/* Fun��es de Cadastro */
     
     public function cadastrarUsuario($nome, $email, $dtNasc, $cpf, $senha, $imagem, $permissao, $cep, $rua, $cidade, $tipoEndereco, $numEndereco){
                 
@@ -76,7 +76,9 @@ class epicure{
 				// Cadastro do endereço do usuário
                 
                 $this->cadastrarEnderecoUsuario($email, $cep, $rua, $cidade, $tipoEndereco, $numEndereco);
-                
+                echo("<script>alert('Empresa cadastrada com sucesso!');</script>");
+                die(header("Refresh: 0.11;url=/Epicure/dashboard/dashboard.php"));
+				
             }
             
         }
@@ -104,24 +106,104 @@ class epicure{
             $Processo->bindParam(':cepEnderecoUsuario', $cep, PDO::PARAM_STR);
             
             try{
+                // Execução do valor de $SQL
 				
-				// Execução do SQL
-                
                 $Processo->execute();
                 
             }catch (Exception $ex){
 				
-				// Catch de Erros
+				// Catch de erros durante o processo
                 
                 $this->mensagemErro($ex->getMessage());
                 
             }finally{
 				
-				// Desconexão do BD; Redirecionamento para o index.php
-
                 $this->exitConexao();
-                echo("<script>alert('Cadastrado com sucesso!');</script>");
-                die(header("Refresh: 0.11;url=/Epicure/index.php"));
+                
+            }
+            
+        }
+        
+    }
+	
+	public function cadastrarEmpresa($nome, $email, $senha, $telefone, $cnpj, $cep, $rua, $cidade, $tipoEndereco, $numEndereco){
+        
+        if($this->openConexao() == true){
+			
+			// Chamada de função para obter o código de empresa pelo seu email
+                                
+            $SQL = "INSERT INTO empresa (NomeEmpresa, CNPJEmpresa, EmailEmpresa, TelefoneEmpresa, SenhaEmpresa) VALUES (:nome, :cnpj, :email, :telefone, :senha)";
+			
+
+			// Binding de valores para rodar ao lado do SQL
+			
+			$Processo = $this->PDO->prepare($SQL);
+            $Processo->bindParam(":nome", $nome, PDO::PARAM_STR);
+			$Processo->bindParam(':cnpj', $cnpj, PDO::PARAM_STR);
+            $Processo->bindParam(':email', $email, PDO::PARAM_STR);
+            $Processo->bindParam(':telefone', $telefone, PDO::PARAM_STR);
+            $Processo->bindParam(':senha', $senha, PDO::PARAM_STR);
+            
+            try{
+                // Execução do valor de $SQL
+				
+                $Processo->execute();
+                
+            }catch (Exception $ex){
+				
+				// Catch de erros durante o processo
+                
+                $this->mensagemErro($ex->getMessage());
+                
+            }finally{
+				
+				// Cadastro do endereço da empresa
+                
+                $this->cadastrarEnderecoEmpresa($email, $cep, $rua, $cidade, $tipoEndereco, $numEndereco);
+                echo("<script>alert('Empresa cadastrada com sucesso!');</script>");
+                die(header("Refresh: 0.11;url=/Epicure/dashboard/dashboard.php"));
+				
+                
+            }
+            
+        }
+        
+    }
+	
+	public function cadastrarEnderecoEmpresa($email, $cep, $rua, $cidade, $tipoEndereco, $numEndereco){
+        
+        if($this->openConexao() == true){
+			
+			// Chamada de função para obter o código de usuário pelo seu email
+                        
+            $codEmpresa = $this->procuraEmailEmpresa($email);
+			            
+            $SQL = "INSERT INTO enderecoempresa (CodEmpresa, RuaEnderecoEmpresa, CidadeEnderecoEmpresa, TipoEnderecoEmpresa, NumEnderecoEmpresa, CEPEnderecoEmpresa) VALUES (:codEmpresa, :ruaEnderecoEmpresa, :cidadeEnderecoEmpresa, :tipoEnderecoCidade, :numEnderecoEmpresa, :cepEnderecoEmpresa)";
+			
+			// Binding de valores para rodar ao lado do SQL
+			
+			$Processo = $this->PDO->prepare($SQL);
+            $Processo->bindParam(":codEmpresa", $codEmpresa, PDO::PARAM_STR);
+            $Processo->bindParam(':ruaEnderecoEmpresa', $rua, PDO::PARAM_STR);
+            $Processo->bindParam(':cidadeEnderecoEmpresa', $cidade, PDO::PARAM_STR);
+            $Processo->bindParam(':tipoEnderecoCidade', $tipoEndereco, PDO::PARAM_STR);
+            $Processo->bindParam(':numEnderecoEmpresa', $numEndereco, PDO::PARAM_STR);
+            $Processo->bindParam(':cepEnderecoEmpresa', $cep, PDO::PARAM_STR);
+            
+            try{
+                // Execução do valor de $SQL
+				
+                $Processo->execute();
+                
+            }catch (Exception $ex){
+				
+				// Catch de erros durante o processo
+                
+                $this->mensagemErro($ex->getMessage());
+                
+            }finally{
+				                
+                $this->exitConexao();
                 
             }
             
@@ -240,6 +322,8 @@ class epicure{
         }
         
     }
+	
+/* Login */
 	
 	public function login($email, $senha){
             
@@ -371,7 +455,6 @@ class epicure{
         
     }
 	
-	
 	public function alterarEnderecoUsuario($codUsuario, $cep, $rua, $cidade, $tipoEndereco, $numEndereco){
             
         if($this->openConexao()){
@@ -428,7 +511,6 @@ class epicure{
         }
         
     }
-	
 	
 	public function alterarEnderecoEmpresa($codEmpresa, $cep, $rua, $cidade, $tipoEndereco, $numEndereco){
             
@@ -559,6 +641,106 @@ class epicure{
    	
 /* Busca de Dados */
 
+	public function totalUsuarios(){
+        
+        if($this->openConexao()){
+            
+            $SQL = "SELECT * FROM usuario";
+            
+            $Processo = $this->PDO->prepare($SQL);
+            
+            $Processo->execute();
+            $total = $Processo->rowCount();
+            $this->exitConexao();
+            
+        }
+        
+        return $total;
+       
+	}
+	
+	public function totalEmpresas(){
+        
+        if($this->openConexao()){
+            
+            $SQL = "SELECT * FROM usuario";
+            
+            $Processo = $this->PDO->prepare($SQL);
+            
+            $Processo->execute();
+            $total = $Processo->rowCount();
+            $this->exitConexao();
+            
+        }
+        
+        return $total;
+       
+	}
+
+	public function procuraUsuarios(){
+        
+        if($this->openConexao()){
+            
+            $SQL = "SELECT *FROM usuario";
+			
+			// Binding de valores para rodar ao lado do SQL
+            
+            $Processo = $this->PDO->prepare($SQL);
+			
+			// Execução do SQL
+                            
+            $Processo->execute();
+            $info = $Processo->fetchall(PDO::FETCH_ASSOC);
+			
+			// Validação da informação; Redirecionamento para o cadastro.php
+            
+            if($info == NULL){
+                
+                $this->Erro("Não há usuários");
+                die(header("Refresh: 0.1;url=/Epicure/index.php"));
+                
+            }
+            
+            // Retorno das informações obtidas sobre o usuário
+			
+            return $info;
+                            
+        }
+        
+    }
+	
+	public function procuraEmpresas(){
+        
+        if($this->openConexao()){
+            
+            $SQL = "SELECT * FROM empresa";
+			
+			// Binding de valores para rodar ao lado do SQL
+            
+            $Processo = $this->PDO->prepare($SQL);
+			
+			// Execução do SQL
+                            
+            $Processo->execute();
+            $info = $Processo->fetch(PDO::FETCH_ASSOC);
+			
+			// Validação da informação; Redirecionamento para o cadastro.php
+            
+            if($info == NULL){
+                
+                $this->Erro("Não há empresas");
+                die(header("Refresh: 0.1;url=/Epicure/index.php"));
+                
+            }
+            
+            // Retorno das informações obtidas sobre o usuário
+			
+            return $info;
+                            
+        }
+        
+    }
+
 	public function procuraUsuario($id){
         
         if($this->openConexao()){
@@ -651,6 +833,35 @@ class epicure{
 		// Retorno do Código do Usuário
 
 		return $info['CodUsuario'];
+
+	}
+	
+	public function procuraEmailEmpresa($email){
+
+		$SQL = "SELECT CodEmpresa FROM empresa WHERE EmailEmpresa = :email";
+            
+		// Binding de valores para rodar ao lado do SQL
+			
+		$Processo = $this->PDO->prepare($SQL);
+		$Processo->bindParam(":email", $email, PDO::PARAM_STR);
+		
+		// Execução do SQL
+						
+		$Processo->execute();
+		$info = $Processo->fetch(PDO::FETCH_ASSOC);
+		
+		// Validação das informações; Redirecionamento para o index.php
+		
+		if($info == NULL){
+			
+			$this->Erro("Email da Empresa não encontrado");
+			die(header("Refresh: 0.1;url=/Epicure/cadastro-empresa.php"));
+			
+		}
+		
+		// Retorno do Código do Usuário
+
+		return $info['CodEmpresa'];
 
 	}
 	
